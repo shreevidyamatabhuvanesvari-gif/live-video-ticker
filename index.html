@@ -1,0 +1,32 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#06111b">
+<title>Live Video Ticker</title>
+<style>
+*{box-sizing:border-box}body{margin:0;background:#02070d;color:#f4f7fb;font:16px system-ui,-apple-system,"Noto Sans Devanagari",sans-serif}button,input,textarea{font:inherit}button,label{touch-action:manipulation}.app{max-width:1400px;margin:auto;padding:10px}.head{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:12px 14px;background:#06111b;border:1px solid #1b2a38;border-radius:18px 18px 0 0}.brand{font-size:clamp(24px,4vw,44px);font-weight:800;white-space:nowrap}.head-note{opacity:.85;font-size:14px}.full{background:#102334;border:1px solid #2a4254;color:#fff;border-radius:11px;padding:11px 15px;font-weight:700}.display{position:relative;aspect-ratio:16/9;overflow:hidden;background:#000;border:1px solid #263846}.display:fullscreen{width:100vw;height:100dvh;aspect-ratio:auto;border:0}.display video{width:100%;height:100%;display:block;object-fit:contain;background:#000}.empty{position:absolute;inset:0;display:grid;place-items:center;color:#9fb0bf;pointer-events:none;text-align:center;padding:20px}.ticker{position:absolute;left:0;right:0;z-index:3;display:flex;align-items:center;height:62px;background:rgba(0,10,18,.78);border-top:2px solid #f4d10a;border-bottom:2px solid #f4d10a;overflow:hidden;pointer-events:none}.ticker.top{top:8%}.ticker.mid{top:57%}.ticker.bottom{bottom:13%}.live{flex:0 0 auto;height:100%;display:flex;align-items:center;gap:9px;padding:0 17px;background:#f5222d;color:#fff;font-size:26px;font-weight:900;letter-spacing:.4px}.dot{width:13px;height:13px;border-radius:50%;background:#fff}.ticker-window{min-width:0;overflow:hidden;white-space:nowrap}.ticker-track{display:flex;width:max-content;transform:translate3d(0,0,0);will-change:transform}.ticker-unit{flex:none;padding-right:55px;font-size:clamp(23px,3.1vw,44px);font-weight:800;white-space:nowrap}.controls{display:grid;grid-template-columns:1.05fr 1.75fr 1.2fr 1.05fr 1fr;gap:10px;padding:10px 0}.card{background:#071421;border:1px solid #1b3040;border-radius:14px;padding:14px}.card h2{margin:0 0 11px;font-size:18px}.choose,.action{display:flex;align-items:center;justify-content:center;gap:8px;width:100%;border:0;border-radius:10px;padding:13px 12px;font-weight:800;cursor:pointer}.choose{background:#f0f4f7;color:#08121c}.action{color:#fff}.play{background:#00b85c}.stop{background:#f33}.update{background:#1683ff;margin-top:9px}.file{margin:10px 0 0;color:#b5c4d0;overflow-wrap:anywhere;font-size:14px}.text{width:100%;min-height:78px;resize:vertical;border:1px solid #31485a;background:#07101a;color:#fff;border-radius:9px;padding:11px;outline:0}.text:focus{border-color:#2795ff}.pos{display:grid;gap:8px}.pos label{display:flex;align-items:center;gap:8px;padding:4px 0}.pos input{accent-color:#178aff}.speed input{width:100%;accent-color:#1683ff}.speed-labels{display:flex;justify-content:space-between;color:#aebcc8;font-size:13px;margin-top:5px}.actions{display:grid;gap:9px}.status{min-height:20px;text-align:center;color:#9fb0bf;font-size:13px;padding:3px 0}.hint{font-size:13px;color:#93a5b2;margin-top:9px}.footer{text-align:center;color:#8ea0ad;padding:7px 0 2px;font-size:13px}@media(max-width:950px){.controls{grid-template-columns:1fr 1fr}.card:nth-child(2){grid-column:span 2}}@media(max-width:620px){.app{padding:6px}.head{padding:10px}.head-note{display:none}.brand{font-size:26px}.ticker{height:52px}.live{padding:0 11px;font-size:20px}.dot{width:10px;height:10px}.ticker-unit{font-size:22px;padding-right:40px}.controls{grid-template-columns:1fr}.card:nth-child(2){grid-column:auto}.card{padding:12px}}
+</style>
+</head>
+<body>
+<main class="app">
+<header class="head"><div class="brand">Live Video Ticker</div><div class="head-note">Display your video with ticker</div><button class="full" id="fullBtn">⛶ Full Screen</button></header>
+<section class="display" id="display">
+<video id="video" controls playsinline preload="metadata"></video>
+<div class="empty" id="empty">Choose a local video to begin.<br>Video audio stays original.</div>
+<div class="ticker bottom" id="ticker"><div class="live"><span class="dot"></span>LIVE</div><div class="ticker-window"><div class="ticker-track" id="track"><span class="ticker-unit"></span><span class="ticker-unit"></span></div></div></div>
+</section>
+<div class="status" id="status" aria-live="polite"></div>
+<section class="controls">
+<div class="card"><h2>1. Select Video</h2><input id="file" type="file" accept="video/*" hidden><label class="choose" for="file">Choose Video</label><div class="file" id="fileName">No video selected</div><div class="file">Duration: <b id="duration">--:--</b></div></div>
+<div class="card"><h2>2. Ticker Text</h2><textarea class="text" id="text" placeholder="Enter ticker text…"></textarea><button class="action update" id="update">✎ Update</button></div>
+<div class="card"><h2>3. Ticker Position</h2><div class="pos"><label><input type="radio" name="pos" value="top"> Top (ऊपर से थोड़ा नीचे)</label><label><input type="radio" name="pos" value="mid"> Middle (मध्य से थोड़ा नीचे)</label><label><input type="radio" name="pos" value="bottom" checked> Bottom (नीचे से थोड़ा ऊपर)</label></div></div>
+<div class="card speed"><h2>4. Ticker Speed</h2><input id="speed" type="range" min="0" max="2" step="1" value="1"><div class="speed-labels"><span>Slow</span><span>Normal</span><span>Fast</span></div></div>
+<div class="card"><h2>5. Controls</h2><div class="actions"><button class="action play" id="start">▶ Start / Play</button><button class="action stop" id="stop">■ Stop</button></div><div class="hint">Ticker runs independently of video duration.</div></div>
+</section>
+<div class="footer">Smooth Video • Smooth Ticker • Anytime Update • Mobile Friendly</div>
+</main>
+<script src="script.js"></script>
+</body>
+</html>
